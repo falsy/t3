@@ -1,6 +1,6 @@
 # T3 Language
 
-**T3** is a modern, minimal superset of TypeScript, designed to make JavaScript development cleaner and more intuitive.  
+T3 is a minimal superset of TypeScript that makes JavaScript development cleaner and simpler.  
  It removes unnecessary clutter while preserving TypeScript's power.
 
 ## ✨ Features
@@ -37,8 +37,8 @@ If no `--outDir` is specified, output goes to the same directory with `.ts` exte
 ```
 /src
   ├── bin/t3.ts          # CLI entry point
-  ├── parser/            # Grammar parser using peggy
-  ├── transpiler/        # T3 → TS transpilation logic
+  ├── parser.ts          # Grammar parser using peggy
+  ├── transpiler.ts      # T3 → TS transpilation logic
   └── index.ts           # Library entry point
 grammar.pegjs            # Custom grammar rules
 ```
