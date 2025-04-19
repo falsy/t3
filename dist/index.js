@@ -11,7 +11,6 @@ function parseT3(code) {
 
 // src/transpiler.ts
 function transpile(ast) {
-  console.log("Transpiling AST:", JSON.stringify(ast, null, 2));
   return ast.map((node) => emit(node)).filter((node) => node.trim() !== "").join("\n").trim();
 }
 function emit(node, indent = "") {
