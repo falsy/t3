@@ -36,11 +36,10 @@ If no `--outDir` is specified, output goes to the same directory with `.ts` exte
 
 ```
 /src
-  ├── bin/t3.ts          # CLI entry point
+  ├── grammar.pegjs      # Custom grammar rules
+  ├── t3.ts              # CLI entry point
   ├── parser.ts          # Grammar parser using peggy
-  ├── transpiler.ts      # T3 → TS transpilation logic
-  └── index.ts           # Library entry point
-grammar.pegjs            # Custom grammar rules
+  └── transpiler.ts      # T3 → TS transpilation logic
 ```
 
 ## 📜 License
