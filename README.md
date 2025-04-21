@@ -19,6 +19,12 @@ npm install -g t3-lang
 Or use with `npx`:
 
 ```bash
+npx t3-lang path/to/file.t3
+```
+
+> If you have installed it globally, you can also use the `t3` command directly.
+
+```bash
 npx t3 path/to/file.t3
 ```
 
@@ -37,8 +43,8 @@ If no `--outDir` is specified, output goes to the same directory with `.ts` exte
 ```
 /src
   ├── grammar.pegjs      # Custom grammar rules
-  ├── t3.ts              # CLI entry point
   ├── parser.ts          # Grammar parser using peggy
+  ├── t3.ts              # CLI entry point
   └── transpiler.ts      # T3 → TS transpilation logic
 ```
 
