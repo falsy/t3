@@ -1,6 +1,7 @@
 import fs from "fs"
 import path from "path"
-import { parseT3, transpile } from ".."
+import { parseT3 } from "./parser.js"
+import { transpile } from "./transpiler.js"
 
 const args = process.argv.slice(2)
 const inputPath = args[0]
