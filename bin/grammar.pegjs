@@ -9,7 +9,7 @@ _ "whitespace" = [ \t\n\r]*
 __ "required whitespace" = [ \t]+
 
 ifStatement
-  = pre:[ \t]* "if" __ cond:ifExpression _ block:BlockStatement newline? {
+  = pre:[ \t]* "if" __ cond:ifExpression _ block:blockStatement newline? {
       return {
         type: "IfStatement",
         condition: cond,
@@ -19,7 +19,7 @@ ifStatement
     }
 
 forStatement
-  = pre:[ \t]* "for" __ cond:forExpression _ block:BlockStatement newline? {
+  = pre:[ \t]* "for" __ cond:forExpression _ block:blockStatement newline? {
       return {
         type: "ForStatement",
         condition: cond,
@@ -29,7 +29,7 @@ forStatement
     }
 
 whileStatement
-  = pre:[ \t]* "while" __ cond:whileExpression _ block:BlockStatement newline? {
+  = pre:[ \t]* "while" __ cond:whileExpression _ block:blockStatement newline? {
       return {
         type: "WhileStatement",
         condition: cond,
@@ -39,7 +39,7 @@ whileStatement
     }
 
 switchStatement
-  = pre:[ \t]* "switch" __ cond:switchExpression _ block:SwitchBlockStatement newline? {
+  = pre:[ \t]* "switch" __ cond:switchExpression _ block:switchBlockStatement newline? {
       return {
         type: "SwitchStatement",
         condition: cond,
@@ -83,7 +83,7 @@ switchExpression
     }
 
 caseStatement
-  = pre:[ \t]* label:$("case" [^:\n\r]* ":") _ block:(BlockStatement / caseBlockContent) _ {
+  = pre:[ \t]* label:$("case" [^:\n\r]* ":") _ block:(blockStatement / caseBlockContent) _ {
       return {
         type: "CaseStatement",
         label: label,
@@ -94,7 +94,7 @@ caseStatement
     }
 
 defaultStatement
-  = pre:[ \t]* label:$("default:") _ block:(BlockStatement / caseBlockContent) _ {
+  = pre:[ \t]* label:$("default:") _ block:(blockStatement / caseBlockContent) _ {
       return {
         type: "CaseStatement",
         label: label,
@@ -110,7 +110,7 @@ switchCaseElement
 blockElement
   = ifStatement / forStatement / whileStatement / switchStatement / rawLine
 
-BlockStatement
+blockStatement
   = "{" _ newline* stmts:(blockElement _ newline*)* _ "}" {
       return {
         type: "BlockStatement",
@@ -131,7 +131,7 @@ caseContentLine
       return line;
     }
 
-SwitchBlockStatement
+switchBlockStatement
   = "{" _ newline* stmts:(switchCaseElement _ newline*)* _ "}" {
       return {
         type: "SwitchBlockStatement",
