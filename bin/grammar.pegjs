@@ -13,7 +13,7 @@ ifStatement
       return {
         type: "IfStatement",
         condition: cond,
-        body: block,
+        body: block.body,
         indent: pre.join("")
       };
     }
@@ -23,7 +23,7 @@ forStatement
       return {
         type: "ForStatement",
         condition: cond,
-        body: block,
+        body: block.body,
         indent: pre.join("")
       };
     }
@@ -33,13 +33,13 @@ whileStatement
       return {
         type: "WhileStatement",
         condition: cond,
-        body: block,
+        body: block.body,
         indent: pre.join("")
       };
     }
 
 switchStatement
-  = pre:[ \t]* "switch" __ cond:switchExpression _ block:BlockStatement newline? {
+  = pre:[ \t]* "switch" __ cond:switchExpression _ block:SwitchBlockStatement newline? {
       return {
         type: "SwitchStatement",
         condition: cond,
@@ -82,6 +82,31 @@ switchExpression
       return expr.trim();
     }
 
+caseStatement
+  = pre:[ \t]* label:$("case" [^:\n\r]* ":") _ block:(BlockStatement / caseBlockContent) _ {
+      return {
+        type: "CaseStatement",
+        label: label,
+        block: block,
+        hasBlock: block.type === "BlockStatement",
+        indent: pre.join("")
+      };
+    }
+
+defaultStatement
+  = pre:[ \t]* label:$("default:") _ block:(BlockStatement / caseBlockContent) _ {
+      return {
+        type: "CaseStatement",
+        label: label,
+        block: block,
+        hasBlock: block.type === "BlockStatement",
+        indent: pre.join("")
+      };
+    }
+
+switchCaseElement
+  = caseStatement / defaultStatement
+
 blockElement
   = ifStatement / forStatement / whileStatement / switchStatement / rawLine
 
@@ -89,6 +114,27 @@ BlockStatement
   = "{" _ newline* stmts:(blockElement _ newline*)* _ "}" {
       return {
         type: "BlockStatement",
+        body: stmts.map(([stmt]) => stmt)
+      };
+    }
+
+caseBlockContent
+  = body:(caseContentLine _ newline*)* {
+      return {
+        type: "CaseBlockContent",
+        body: body.filter(stmt => stmt !== null)
+      };
+    }
+
+caseContentLine
+  = !("case" / "default:") _ line:rawLine {
+      return line;
+    }
+
+SwitchBlockStatement
+  = "{" _ newline* stmts:(switchCaseElement _ newline*)* _ "}" {
+      return {
+        type: "SwitchBlockStatement",
         body: stmts.map(([stmt]) => stmt)
       };
     }

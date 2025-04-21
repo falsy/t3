@@ -22,113 +22,79 @@ function parseT3(code) {
 function transpile(ast2) {
   return ast2.map((node) => emit(node)).filter((node) => node.trim() !== "").join("\n").trim();
 }
-function emit(node, indent = "", inSwitchCase = false) {
+function emit(node, indent = "") {
   if (typeof node === "string") {
     const match = node.match(/^(\s*)\(/);
     if (match) {
       const leading = match[1];
       return indent + leading + ";" + node.trimStart();
     }
-    const caseMatch = node.match(/^(\s*)(case\s+.*:|default:)(.*)$/);
-    if (caseMatch) {
-      const [, leading, caseStatement, rest] = caseMatch;
-      return indent + caseStatement + rest;
-    }
-    if (inSwitchCase) {
-      return indent + "  " + node;
-    }
     return indent + node;
   }
   const innerIndent = indent + (node.indent || "");
   if (node.type === "IfStatement") {
     const condition = node.condition.replace(/==/g, "===");
-    const body = emit(node.body, innerIndent);
+    const bodyContent = Array.isArray(node.body) ? node.body.map((stmt) => emit(stmt, innerIndent + "  ")).join("\n") : emit(node.body, innerIndent + "  ");
     return `${innerIndent}if (${condition}) {
-${body}
+${bodyContent}
 ${innerIndent}}`;
   }
   if (node.type === "ForStatement") {
     const condition = node.condition.replace(/==/g, "===");
-    const body = emit(node.body, innerIndent);
+    const bodyContent = Array.isArray(node.body) ? node.body.map((stmt) => emit(stmt, innerIndent + "  ")).join("\n") : emit(node.body, innerIndent + "  ");
     return `${innerIndent}for (${condition}) {
-${body}
+${bodyContent}
 ${innerIndent}}`;
   }
   if (node.type === "WhileStatement") {
     const condition = node.condition.replace(/==/g, "===");
-    const body = emit(node.body, innerIndent);
+    const bodyContent = Array.isArray(node.body) ? node.body.map((stmt) => emit(stmt, innerIndent + "  ")).join("\n") : emit(node.body, innerIndent + "  ");
     return `${innerIndent}while (${condition}) {
-${body}
+${bodyContent}
 ${innerIndent}}`;
   }
   if (node.type === "SwitchStatement") {
     const condition = node.condition;
-    const body = processSwitchBody(node.body, innerIndent);
+    const body = emit(node.body, innerIndent);
     return `${innerIndent}switch (${condition}) {
 ${body}
 ${innerIndent}}`;
   }
+  if (node.type === "CaseStatement") {
+    const label = node.label;
+    const caseIndent = innerIndent + "  ";
+    const blockIndent = caseIndent + "  ";
+    if (node.hasBlock) {
+      const blockLines = node.block.body.map(
+        (item) => emit(item, blockIndent)
+      );
+      const blockContent = blockLines.join("\n");
+      return `${caseIndent}${label} {
+${blockContent}
+${caseIndent}}`;
+    } else if (node.block && node.block.type === "CaseBlockContent") {
+      if (node.block.body && node.block.body.length > 0) {
+        const blockContent = node.block.body.map((lines) => {
+          return lines.map((line) => emit(line, blockIndent)).filter((line) => line !== "").join("\n");
+        }).join("\n");
+        return `${caseIndent}${label}
+${blockContent}`;
+      }
+      return `${caseIndent}${label}`;
+    } else {
+      return `${caseIndent}${label}`;
+    }
+  }
   if (node.type === "BlockStatement") {
-    return node.body.map((stmt) => emit(stmt, indent + "  ", false)).join("\n");
+    return node.body.map((stmt) => emit(stmt, indent + "  ")).join("\n");
+  }
+  if (node.type === "SwitchBlockStatement") {
+    return node.body.map((stmt) => emit(stmt, indent)).join("\n");
+  }
+  if (node.type === "CaseBlockContent") {
+    return node.lines.map((line) => emit(line, indent)).join("\n");
   }
   return "";
-}
-function processSwitchBody(node, indent) {
-  if (node.type !== "BlockStatement") {
-    return emit(node, indent);
-  }
-  const statements = node.body.map((stmt) => {
-    if (typeof stmt !== "string") {
-      return stmt;
-    }
-    return stmt.trim();
-  });
-  let result2 = [];
-  let i = 0;
-  while (i < statements.length) {
-    const stmt = statements[i];
-    if (typeof stmt === "string" && (stmt.startsWith("case ") || stmt.startsWith("default:"))) {
-      result2.push(`${indent}  ${stmt}`);
-      if (i + 1 < statements.length && statements[i + 1] === "{") {
-        i++;
-        let blockContent = [];
-        let braceCount = 1;
-        let j = i + 1;
-        while (j < statements.length && braceCount > 0) {
-          const blockStmt = statements[j];
-          if (blockStmt === "{") {
-            braceCount++;
-          } else if (blockStmt === "}") {
-            braceCount--;
-            if (braceCount === 0) {
-              break;
-            }
-          }
-          if (braceCount > 0) {
-            blockContent.push(`${indent}    ${blockStmt}`);
-          }
-          j++;
-        }
-        result2 = result2.concat(blockContent);
-        result2.push(`${indent}  }`);
-        i = j + 1;
-      } else {
-        i++;
-        while (i < statements.length) {
-          const contentStmt = statements[i];
-          if (typeof contentStmt === "string" && (contentStmt.startsWith("case ") || contentStmt.startsWith("default:"))) {
-            break;
-          }
-          result2.push(`${indent}    ${contentStmt}`);
-          i++;
-        }
-      }
-    } else {
-      result2.push(`${indent}  ${stmt}`);
-      i++;
-    }
-  }
-  return result2.join("\n");
 }
 
 // src/t3.ts
