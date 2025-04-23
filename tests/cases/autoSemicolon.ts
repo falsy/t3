@@ -1,0 +1,4 @@
+;(window as any).alert("test")
+function indent() {
+  ;(window as any).alert("test")
+}

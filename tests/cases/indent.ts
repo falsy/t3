@@ -1,0 +1,40 @@
+function outer() {
+  if (true) {
+    const y = Math.floor(Math.random() * 3)
+    switch (y) {
+      case 0: {
+        console.log("0")
+        break
+      }
+      case 1: {
+        console.log("1")
+        break
+      }
+      case 2: {
+        console.log("2")
+        break
+      }
+      default: {
+        console.log("default")
+      }
+    }
+  }
+  function inner() {
+    if (true) {
+      const y = Math.floor(Math.random() * 3)
+      switch (y) {
+        case 0:
+          console.log("0")
+          break
+        case 1:
+          console.log("1")
+          break
+        case 2:
+          console.log("2")
+          break
+        default:
+          console.log("default")
+      }
+    }
+  }
+}

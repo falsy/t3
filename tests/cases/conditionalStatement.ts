@@ -1,14 +1,14 @@
 const i = 0
 const j = 1
-const k = 2
-if (i > j) {
+// if
+if (i < j) {
   console.log("hello world")
 }
 if (j === 1) {
   console.log("hello world")
 }
-if ((i === 0 && j === 1) || i === 0) {
-  ;(window as any).alert("hello world")
+if ((i === 0 && j === 1) || i === i) {
+  console.log("hello world")
   if (j === 1) {
     const k = 4
     if (k === 4) {
@@ -21,4 +21,33 @@ function test(): boolean {
 }
 if (test()) {
   console.log("hello world")
+}
+// switch-case
+const y = Math.floor(Math.random() * 3)
+switch (y) {
+  case 0: {
+    console.log("0")
+    break
+  }
+  case 1: {
+    console.log("1")
+    break
+  }
+  case 2: {
+    console.log("2")
+    break
+  }
+}
+switch (y) {
+  case 0:
+    console.log("0")
+    break
+  case 1:
+    console.log("1")
+    break
+  case 2:
+    console.log("2")
+    break
+  default:
+    console.log("default")
 }

@@ -33,21 +33,21 @@ function emit(node, indent = "") {
   }
   const innerIndent = indent + (node.indent || "");
   if (node.type === "IfStatement") {
-    const condition = node.condition.replace(/==/g, "===");
+    const condition = node.condition.replace(/==/g, "===").replace(/!=/g, "!==");
     const bodyContent = Array.isArray(node.body) ? node.body.map((stmt) => emit(stmt, innerIndent + "  ")).join("\n") : emit(node.body, innerIndent + "  ");
     return `${innerIndent}if (${condition}) {
 ${bodyContent}
 ${innerIndent}}`;
   }
   if (node.type === "ForStatement") {
-    const condition = node.condition.replace(/==/g, "===");
+    const condition = node.condition.replace(/==/g, "===").replace(/!=/g, "!==");
     const bodyContent = Array.isArray(node.body) ? node.body.map((stmt) => emit(stmt, innerIndent + "  ")).join("\n") : emit(node.body, innerIndent + "  ");
     return `${innerIndent}for (${condition}) {
 ${bodyContent}
 ${innerIndent}}`;
   }
   if (node.type === "WhileStatement") {
-    const condition = node.condition.replace(/==/g, "===");
+    const condition = node.condition.replace(/==/g, "===").replace(/!=/g, "!==");
     const bodyContent = Array.isArray(node.body) ? node.body.map((stmt) => emit(stmt, innerIndent + "  ")).join("\n") : emit(node.body, innerIndent + "  ");
     return `${innerIndent}while (${condition}) {
 ${bodyContent}

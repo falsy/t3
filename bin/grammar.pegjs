@@ -55,24 +55,24 @@ rawLine
 
 ifExpression
   = expr:$([^\n\r{}]+) {
-      if (expr.includes("===")) {
-        throw new SyntaxError("'===' is not allowed in T3. Please use '==' instead, which will be transpiled to strict equality.");
+      if (expr.includes("===") || expr.includes("!==")) {
+        throw new SyntaxError("'===' and '!==' are not allowed in T3. Please use '==' and '!=' instead; they will be transpiled to strict equality.");
       }
       return expr.trim();
     }
 
 whileExpression
   = expr:$([^\n\r{}]+) {
-      if (expr.includes("===")) {
-        throw new SyntaxError("'===' is not allowed in T3. Please use '==' instead, which will be transpiled to strict equality.");
+      if (expr.includes("===") || expr.includes("!==")) {
+        throw new SyntaxError("'===' and '!==' are not allowed in T3. Please use '==' and '!=' instead; they will be transpiled to strict equality.");
       }
       return expr.trim();
     }
 
 forExpression
   = expr:$([^\n\r{}]+) {
-    if (expr.includes("===")) {
-        throw new SyntaxError("'===' is not allowed in T3. Please use '==' instead, which will be transpiled to strict equality.");
+    if (expr.includes("===") || expr.includes("!==")) {
+        throw new SyntaxError("'===' and '!==' are not allowed in T3. Please use '==' and '!=' instead; they will be transpiled to strict equality.");
       }
       return expr.trim();
     }
