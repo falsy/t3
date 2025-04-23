@@ -28,7 +28,8 @@
   "scripts": {
     "copy": "cp src/grammar.pegjs bin/grammar.pegjs",
     "build": "rm -rf bin && mkdir -p bin && esbuild src/t3.ts --bundle --platform=node --format=esm --outfile=bin/t3.js --packages=external --banner:js=\"#!/usr/bin/env node\" && chmod +x bin/t3.js && npm run copy",
-    "test": "npm run build && ./bin/t3.js ./examples/test.t3"
+    "test-2": "npm run build && ./bin/t3.js ./examples/test.t3",
+    "test": "npx tsx tests/testRunner.ts"
   },
   "engines": {
     "node": ">=20.16.0"

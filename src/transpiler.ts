@@ -80,6 +80,38 @@ function emit(node: any, indent: string = ""): string {
     }
   }
 
+  // if (node.type === "FunctionDeclaration") {
+  //   const args = node.args
+  //   const bodyContent = Array.isArray(node.body)
+  //     ? node.body.map((stmt: any) => emit(stmt, indent + "  ")).join("\n")
+  //     : emit(node.body, indent + "  ")
+  //   return `${indent}function ${node.name}${args} {\n${bodyContent}\n${indent}}`
+  // }
+
+  // if (node.type === "FunctionExpression") {
+  //   const args = node.args
+  //   const bodyContent = node.body
+  //     .map((stmt: any) => emit(stmt, indent + "  "))
+  //     .join("\n")
+  //   return `${indent}const ${node.name} = function${args} {\n${bodyContent}\n${indent}}`
+  // }
+
+  // if (node.type === "FunctionObjectMethod") {
+  //   const args = node.args
+  //   const bodyContent = node.body
+  //     .map((stmt: any) => emit(stmt, indent + "  "))
+  //     .join("\n")
+  //   return `${indent}${node.key}: function${args} {\n${bodyContent}\n${indent}}`
+  // }
+
+  // if (node.type === "FunctionCallExpression") {
+  //   const args = node.args
+  //   const bodyContent = node.body
+  //     .map((stmt: any) => emit(stmt, indent + "  "))
+  //     .join("\n")
+  //   return `${indent}(function${args} {\n${bodyContent}\n${indent}})`
+  // }
+
   if (node.type === "BlockStatement") {
     return node.body.map((stmt: any) => emit(stmt, indent + "  ")).join("\n")
   }

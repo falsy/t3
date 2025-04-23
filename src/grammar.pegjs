@@ -138,3 +138,48 @@ switchBlockStatement
         body: stmts.map(([stmt]) => stmt)
       };
     }
+// functionDeclaration
+//   = pre:[ \t]* "func" __ name:identifier _ args:$([^\n\r{]+) _ block:blockStatement newline? {
+//       return {
+//         type: "FunctionDeclaration",
+//         name: name,
+//         args: args.trim(),
+//         body: block.body,
+//         indent: pre.join("")
+//       };
+//   }
+
+// identifier
+//   = $([a-zA-Z_][a-zA-Z0-9_]*)
+
+// functionAssignmentExpression
+//   = pre:[ \t]* name:identifier _ "=" _ "func" _ args:$([^\n\r{]+) _ block:blockStatement newline? {
+//       return {
+//         type: "FunctionExpression",
+//         name,
+//         args: args.trim(),
+//         body: block.body,
+//         indent: pre.join("")
+//       };
+//   }
+
+// functionObjectProperty
+//   = pre:[ \t]* key:identifier _ ":" _ "func" _ args:$([^\n\r{]+) _ block:blockStatement newline? {
+//       return {
+//         type: "FunctionObjectMethod",
+//         key,
+//         args: args.trim(),
+//         body: block.body,
+//         indent: pre.join("")
+//       };
+//   }
+
+// functionCallExpression
+//     = pre:[ \t]* "func" _ args:$([^\n\r{]+) _ block:blockStatement newline? {
+//         return {
+//           type: "FunctionCallExpression",
+//           args: args.trim(),
+//           body: block.body,
+//           indent: pre.join("")
+//         };
+//     }
