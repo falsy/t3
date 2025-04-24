@@ -9,7 +9,19 @@ if (i !== 0) {
 while (i !== 0) {
   console.log("hello world")
 }
-const isTrue = i === 0
-const isFalse = i !== false
+const hello = true ? i === 0 ? "world" : "false" : "none"
+const world = j === 1 ? i !== 0 ? "false" : "hello" : "none"
 const ternaryOperator1 = i === 0 ? "true" : "false"
 const ternaryOperator2 = i !== 0 ? "true" : "false"
+const newLine = i === 0
+  ? j !== 1
+  ? "new line"
+  : "hello"
+  : "world"
+const newLine2 = i !== 0 ?
+  j === 1 ? 
+  "new line" : 
+  "hello" : 
+  "world"
+const isTrue = i === 0
+const isFalse = i !== 0

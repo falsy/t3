@@ -1,5 +1,5 @@
 start
-  = body:(ifStatement / forStatement / whileStatement / switchStatement / rawLine / newline / "}")* _ {
+  = body:(ifStatement / forStatement / whileStatement / switchStatement / assignmentStatement / ternaryExpression / rawLine / newline / "}")* _ {
       return body.filter(x => x !== null && x !== undefined);
     }
 
@@ -46,6 +46,45 @@ switchStatement
         body: block,
         indent: pre.join("")
       };
+    }
+
+assignmentStatement
+  = pre:[ \t]* expr:assignmentContent newline? {
+      return {
+        type: "AssignmentStatement",
+        expression: expr,
+        indent: pre.join("")
+      };
+    }
+
+assignmentContent
+  = expr:$((("const" / "let" / "var") __ [a-zA-Z_][a-zA-Z0-9_]* _ "=" _) [^\n\r;]*) {
+      if (expr.includes("===") || expr.includes("!==")) {
+        throw new SyntaxError("'===' and '!==' are not allowed in T3. Please use '==' and '!=' instead; they will be transpiled to strict equality.");
+      }
+      return expr.trim();
+    }
+
+ternaryExpression
+  = pre:[ \t]* expr:ternaryContent newline? {
+      return {
+        type: "TernaryExpression",
+        expression: expr,
+        indent: pre.join("")
+      };
+    }
+
+ternaryContent 
+  = fullExpr:$(
+      condition:([^\n\r?]* "?") 
+      trueExpr:([ \t]* newline? [ \t]* [^\n\r:;]+)*
+      ":" 
+      falseExpr:([ \t]* newline? [ \t]* [^\n\r;]+)*
+    ) {
+      if (fullExpr.includes("===") || fullExpr.includes("!==")) {
+        throw new SyntaxError("'===' and '!==' are not allowed in T3. Please use '==' and '!=' instead; they will be transpiled to strict equality.");
+      }
+      return fullExpr;
     }
 
 rawLine
@@ -108,7 +147,7 @@ switchCaseElement
   = caseStatement / defaultStatement
 
 blockElement
-  = ifStatement / forStatement / whileStatement / switchStatement / rawLine
+  = ifStatement / forStatement / whileStatement / switchStatement / assignmentStatement / ternaryExpression / rawLine
 
 blockStatement
   = "{" _ newline* stmts:(blockElement _ newline*)* _ "}" {
@@ -138,48 +177,3 @@ switchBlockStatement
         body: stmts.map(([stmt]) => stmt)
       };
     }
-// functionDeclaration
-//   = pre:[ \t]* "func" __ name:identifier _ args:$([^\n\r{]+) _ block:blockStatement newline? {
-//       return {
-//         type: "FunctionDeclaration",
-//         name: name,
-//         args: args.trim(),
-//         body: block.body,
-//         indent: pre.join("")
-//       };
-//   }
-
-// identifier
-//   = $([a-zA-Z_][a-zA-Z0-9_]*)
-
-// functionAssignmentExpression
-//   = pre:[ \t]* name:identifier _ "=" _ "func" _ args:$([^\n\r{]+) _ block:blockStatement newline? {
-//       return {
-//         type: "FunctionExpression",
-//         name,
-//         args: args.trim(),
-//         body: block.body,
-//         indent: pre.join("")
-//       };
-//   }
-
-// functionObjectProperty
-//   = pre:[ \t]* key:identifier _ ":" _ "func" _ args:$([^\n\r{]+) _ block:blockStatement newline? {
-//       return {
-//         type: "FunctionObjectMethod",
-//         key,
-//         args: args.trim(),
-//         body: block.body,
-//         indent: pre.join("")
-//       };
-//   }
-
-// functionCallExpression
-//     = pre:[ \t]* "func" _ args:$([^\n\r{]+) _ block:blockStatement newline? {
-//         return {
-//           type: "FunctionCallExpression",
-//           args: args.trim(),
-//           body: block.body,
-//           indent: pre.join("")
-//         };
-//     }

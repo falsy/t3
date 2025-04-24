@@ -22,6 +22,12 @@ function parseT3(code) {
 function transpile(ast2) {
   return ast2.map((node) => emit(node)).filter((node) => node.trim() !== "").join("\n").trim();
 }
+function replaceComparisonOperators(text) {
+  let result2 = text;
+  result2 = result2.replace(/([^=!><%])[ \t]*==[ \t]*([^=])/g, "$1 === $2");
+  result2 = result2.replace(/([^=!><%])[ \t]*!=[ \t]*([^=])/g, "$1 !== $2");
+  return result2;
+}
 function emit(node, indent = "") {
   if (typeof node === "string") {
     const match = node.match(/^(\s*)\(/);
@@ -29,29 +35,38 @@ function emit(node, indent = "") {
       const leading = match[1];
       return indent + leading + ";" + node.trimStart();
     }
-    return indent + node;
+    const processedString = replaceComparisonOperators(node);
+    return indent + processedString;
   }
   const innerIndent = indent + (node.indent || "");
   if (node.type === "IfStatement") {
-    const condition = node.condition.replace(/==/g, "===").replace(/!=/g, "!==");
+    const condition = replaceComparisonOperators(node.condition);
     const bodyContent = Array.isArray(node.body) ? node.body.map((stmt) => emit(stmt, innerIndent + "  ")).join("\n") : emit(node.body, innerIndent + "  ");
     return `${innerIndent}if (${condition}) {
 ${bodyContent}
 ${innerIndent}}`;
   }
   if (node.type === "ForStatement") {
-    const condition = node.condition.replace(/==/g, "===").replace(/!=/g, "!==");
+    const condition = replaceComparisonOperators(node.condition);
     const bodyContent = Array.isArray(node.body) ? node.body.map((stmt) => emit(stmt, innerIndent + "  ")).join("\n") : emit(node.body, innerIndent + "  ");
     return `${innerIndent}for (${condition}) {
 ${bodyContent}
 ${innerIndent}}`;
   }
   if (node.type === "WhileStatement") {
-    const condition = node.condition.replace(/==/g, "===").replace(/!=/g, "!==");
+    const condition = replaceComparisonOperators(node.condition);
     const bodyContent = Array.isArray(node.body) ? node.body.map((stmt) => emit(stmt, innerIndent + "  ")).join("\n") : emit(node.body, innerIndent + "  ");
     return `${innerIndent}while (${condition}) {
 ${bodyContent}
 ${innerIndent}}`;
+  }
+  if (node.type === "TernaryExpression") {
+    const processedExpression = replaceComparisonOperators(node.expression);
+    return `${innerIndent}${processedExpression}`;
+  }
+  if (node.type === "AssignmentStatement") {
+    const processedExpression = replaceComparisonOperators(node.expression);
+    return `${innerIndent}${processedExpression}`;
   }
   if (node.type === "SwitchStatement") {
     const condition = node.condition;
@@ -92,7 +107,7 @@ ${blockContent}`;
     return node.body.map((stmt) => emit(stmt, indent)).join("\n");
   }
   if (node.type === "CaseBlockContent") {
-    return node.lines.map((line) => emit(line, indent)).join("\n");
+    return node.lines ? node.lines.map((line) => emit(line, indent)).join("\n") : node.body ? node.body.map((line) => emit(line[0], indent)).join("\n") : "";
   }
   return "";
 }
