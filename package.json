@@ -1,6 +1,6 @@
 {
   "name": "t3-lang",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "T3 brings a smoother, cleaner experience to JavaScript with TypeScript’s power—minus the clutter.",
   "keywords": [
     "t3",
@@ -43,7 +43,7 @@
     "typescript": "^5.8.3"
   },
   "bin": {
-    "t3": "./bin/t3.js"
+    "t3": "bin/t3.js"
   },
   "files": [
     "bin"
