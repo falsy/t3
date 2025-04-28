@@ -59,7 +59,8 @@ assignmentStatement
 
 assignmentContent
   = expr:$((("const" / "let" / "var") __ [a-zA-Z_][a-zA-Z0-9_]* _ "=" _) [^\n\r;]*) {
-      if (expr.includes("===") || expr.includes("!==")) {
+      const cleanedExpr = expr.replace(/"([^"\\]|\\.)*"/g, "")
+      if (cleanedExpr.includes("===") || cleanedExpr.includes("!==")) {
         throw new SyntaxError("'===' and '!==' are not allowed in T3. Please use '==' and '!=' instead; they will be transpiled to strict equality.");
       }
       return expr.trim();
@@ -81,7 +82,8 @@ ternaryContent
       ":" 
       falseExpr:([ \t]* newline? [ \t]* [^\n\r;]+)*
     ) {
-      if (fullExpr.includes("===") || fullExpr.includes("!==")) {
+      const cleanedExpr = fullExpr.replace(/"([^"\\]|\\.)*"/g, "")
+      if (cleanedExpr.includes("===") || cleanedExpr.includes("!==")) {
         throw new SyntaxError("'===' and '!==' are not allowed in T3. Please use '==' and '!=' instead; they will be transpiled to strict equality.");
       }
       return fullExpr;
@@ -94,7 +96,8 @@ rawLine
 
 ifExpression
   = expr:$([^\n\r{}]+) {
-      if (expr.includes("===") || expr.includes("!==")) {
+      const cleanedExpr = expr.replace(/"([^"\\]|\\.)*"/g, "")
+      if (cleanedExpr.includes("===") || cleanedExpr.includes("!==")) {
         throw new SyntaxError("'===' and '!==' are not allowed in T3. Please use '==' and '!=' instead; they will be transpiled to strict equality.");
       }
       return expr.trim();
@@ -102,7 +105,8 @@ ifExpression
 
 whileExpression
   = expr:$([^\n\r{}]+) {
-      if (expr.includes("===") || expr.includes("!==")) {
+      const cleanedExpr = expr.replace(/"([^"\\]|\\.)*"/g, "")
+      if (cleanedExpr.includes("===") || cleanedExpr.includes("!==")) {
         throw new SyntaxError("'===' and '!==' are not allowed in T3. Please use '==' and '!=' instead; they will be transpiled to strict equality.");
       }
       return expr.trim();
@@ -110,11 +114,12 @@ whileExpression
 
 forExpression
   = expr:$([^\n\r{}]+) {
-    if (expr.includes("===") || expr.includes("!==")) {
-        throw new SyntaxError("'===' and '!==' are not allowed in T3. Please use '==' and '!=' instead; they will be transpiled to strict equality.");
-      }
-      return expr.trim();
+    const cleanedExpr = expr.replace(/"([^"\\]|\\.)*"/g, "")
+    if (cleanedExpr.includes("===") || cleanedExpr.includes("!==")) {
+      throw new SyntaxError("'===' and '!==' are not allowed in T3. Please use '==' and '!=' instead; they will be transpiled to strict equality.");
     }
+    return expr.trim();
+  }
 
 switchExpression
   = expr:$([^\n\r{}]+) {

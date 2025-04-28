@@ -1,3 +1,4 @@
+export {}
 function outer() {
   if true {
     const y = Math.floor(Math.random() * 3)

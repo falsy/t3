@@ -1,3 +1,4 @@
+export {}
 (window as any).alert("test")
 
 function indent() {
