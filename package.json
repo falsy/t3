@@ -1,6 +1,6 @@
 {
   "name": "t3-lang",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "T3 brings a smoother, cleaner experience to JavaScript with TypeScript’s power—minus the clutter.",
   "keywords": [
     "t3",
@@ -16,7 +16,7 @@
   ],
   "type": "module",
   "author": "Falsy",
-  "license": "Apache License 2.0",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/falsy/t3.git"
@@ -25,14 +25,23 @@
   "bugs": {
     "url": "https://github.com/falsy/t3/issues"
   },
+"main": "dist/index.js",
+  "types": "dist/index.d.ts", 
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
-    "copy": "cp src/grammar.pegjs bin/grammar.pegjs",
-    "build": "rm -rf bin && mkdir -p bin && esbuild src/t3.ts --bundle --platform=node --format=esm --outfile=bin/t3.js --packages=external --banner:js=\"#!/usr/bin/env node\" && chmod +x bin/t3.js && npm run copy",
-    "dev": "npm run build && ./bin/t3.js ./dev/test.t3",
+    "copy": "cp src/grammar.pegjs dist/grammar.pegjs",
+    "build": "tsc && npm run copy",
+    "build:bin": "rm -rf bin && mkdir -p bin && esbuild src/t3.ts --bundle --platform=node --format=esm --outfile=bin/t3.js --packages=external --banner:js=\"#!/usr/bin/env node\" && chmod +x bin/t3.js && cp src/grammar.pegjs bin/grammar.pegjs",
+    "dev": "npm run build:bin && ./bin/t3.js ./dev/test.t3",
     "test": "npx tsx tests/testRunner.ts"
   },
   "engines": {
-    "node": ">=20.16.0"
+    "node": ">=20.0.0"
   },
   "dependencies": {
     "peggy": "^4.2.0"
@@ -46,6 +55,7 @@
     "t3": "bin/t3.js"
   },
   "files": [
-    "bin"
+    "bin",
+    "dist"
   ]
 }
