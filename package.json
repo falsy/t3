@@ -1,6 +1,6 @@
 {
   "name": "t3-lang",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "T3 brings a smoother, cleaner experience to JavaScript with TypeScript’s power—minus the clutter.",
   "keywords": [
     "t3",
@@ -25,7 +25,7 @@
   "bugs": {
     "url": "https://github.com/falsy/t3/issues"
   },
-"main": "dist/index.js",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts", 
   "exports": {
     ".": {
