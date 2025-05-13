@@ -1,6 +1,6 @@
 {
   "name": "t3-lang",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "T3 brings a smoother, cleaner experience to JavaScript with TypeScript’s power—minus the clutter.",
   "keywords": [
     "t3",
@@ -47,9 +47,9 @@
     "peggy": "^4.2.0"
   },
   "devDependencies": {
-    "@types/node": "^22.14.1",
-    "esbuild": "^0.25.2",
-    "typescript": "^5.8.3"
+    "@types/node": "^20.10.0",
+    "typescript": "^5.0.0",
+    "esbuild": "^0.25.2"
   },
   "bin": {
     "t3": "bin/t3.js"
