@@ -1,6 +1,6 @@
 {
   "name": "t3-lang",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "T3 brings a smoother, cleaner experience to JavaScript with TypeScript's power—minus the clutter.",
   "keywords": [
     "t3",
@@ -31,8 +31,7 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
-    },
-    "./t3.d.ts": "./dist/t3.d.ts"
+    }
   },
   "scripts": {
     "copy": "cp src/grammar.pegjs dist/grammar.pegjs && cp src/t3.d.ts dist/t3.d.ts",
@@ -62,8 +61,7 @@
   ],
   "typesVersions": {
     "*": {
-      "*": ["dist/index.d.ts"],
-      "t3": ["dist/t3.d.ts"]
+      "*": ["dist/index.d.ts"]
     }
   }
 }
